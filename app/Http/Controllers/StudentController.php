@@ -27,11 +27,18 @@ class StudentController extends Controller
             'name' => 'required|string|max:255',
             'nim' => 'required|string|unique:students,nim|max:20',
             'email' => 'required|email|unique:students,email|max:255',
+        ]); 
+
+        $student = Student::create([
+            'name' => $request->name,
+            'nim' => $request->nim,
+            'email' => $request->email,
         ]);
 
-        $student = Student::create($validated);
-
-        return response()->json($student, 201);
+        return response()->json([
+            'message' => 'Student created successfully',
+            'data' => $student
+        ], 201);
     }
 
     /**
