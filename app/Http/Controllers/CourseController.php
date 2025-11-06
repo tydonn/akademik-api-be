@@ -51,7 +51,13 @@ class CourseController extends Controller
         //
         $course = Course::findOrFail($id);
 
-        $course->update($request->all());
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'code' => 'sometimes|required|unique:courses,code,' . $course->id,
+            'sks' => 'sometimes|required|integer|min:1|max:10',
+        ]);
+
+        $course->update($validated);
 
         return response()->json($course);
     }

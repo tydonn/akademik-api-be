@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Resources\StudentwithGradeResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/grades/student/{id}', [GradeController::class, 'getGradesByStudent']);
     //untuk mendapatkan grade berdasarkan ID course
     Route::get('/grades/course/{id}', [GradeController::class, 'getGradesByCourse']);
-    
+    //untuk mendapatkan student beserta grades dan courses berdasarkan ID student
+    Route::get('/students/{id}/grades', [StudentController::class, 'getStudentwithGrades']);
+
 });

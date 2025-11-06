@@ -19,6 +19,7 @@ class StudentResource extends JsonResource
             'name' => $this->name,
             'nim' => $this->nim,
             'email' => $this->email,
+            'grades' => GradeResource::collection($this->whenLoaded('grades')),
         ];
     }
 }

@@ -58,6 +58,12 @@ class StudentController extends Controller
         //
         $student = Student::findOrFail($id);
 
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'nim' => 'sometimes|required|string|unique:students,nim,' . $student->id,
+            'email' => 'sometimes|required|email|unique:students,email,' . $student->id,
+        ]);
+
         $student->update($request->all());
 
         return response()->json($student);
@@ -71,6 +77,14 @@ class StudentController extends Controller
         //
         Student::findOrFail($id)->delete();
 
-        return response()->json(['message' => 'deleted successfully']);
+        return response()->json(['message' => 'deleted successfully'], 200);
     }
+
+    //tampilkan student beserta grades dan courses berdasarkan ID student
+    public function getStudentwithGrades($id)
+    {
+        $student = Student::with('grades')->findOrFail($id);
+        return new StudentResource($student);
+    }
+
 }

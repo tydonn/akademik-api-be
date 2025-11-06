@@ -55,7 +55,14 @@ class GradeController extends Controller
     {
         //Update grade berdasarkan ID
         $grade = Grade::findOrFail($id);
-        $grade->update($request->all());
+
+        $validated = $request->validate([
+            'student_id' => 'sometimes|required|exists:students,id',
+            'course_id' => 'sometimes|required|exists:courses,id',
+            'grade' => 'sometimes|required|integer|min:0|max:100',
+        ]);
+
+        $grade->update($validated);
 
         return response()->json(['message' => 'Grade updated successfully', 'data' => $grade]);
     }
