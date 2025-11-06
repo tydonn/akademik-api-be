@@ -10,6 +10,26 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
     //
+    public function createAdmin(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+        ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
+        $user->assignRole('admin');
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => $user
+        ]);
+    }
+
+
     public function register(Request $request)
     {
         //
@@ -23,6 +43,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ]);
+        $user->assignRole('user');
         return response()->json([
             'message' => 'User created successfully',
             'user' => $user
@@ -53,5 +74,9 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
-    
+    public function refresh()
+    {
+        $token = Auth::refresh();
+        return response()->json(['access_token' => $token]);
+    }
 }
